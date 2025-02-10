@@ -47,8 +47,17 @@ export function Hexagon(
         position: "absolute",
         left: "50%",
         top: "50%",
-        transform: `translate(${pixel.x - layout.size}px, ${pixel.y - layout.size}px)`}}
-    >
+        transform: `translate(${pixel.x - layout.size}px, ${pixel.y - layout.size}px)`}}>
+      <svg
+        style={{
+          top: "-5%",
+          left: "-5%",
+          width: "110%",
+          height: "110%",
+          position: "absolute",
+      }}>
+        <polygon id="hexagon" points={points} transform="scale(1.1, 1.1)"/>
+      </svg>
       <img
         src={`./tiles/ST_${fill}.webp`}
         alt=""
@@ -56,17 +65,8 @@ export function Hexagon(
           width: "100%",
           height: "100%",
           position: "absolute",
-          transform: `rotate(${rotate}deg)`
-        }}
-      />
-      <svg
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-      }}>
-        <polygon points={points}/>
-      </svg>
+          transform: `rotate(${rotate}deg)`,
+        }}/>
     </div>
   )
 }

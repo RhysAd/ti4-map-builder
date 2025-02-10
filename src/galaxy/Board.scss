@@ -39,44 +39,15 @@ body {
   user-drag: element;
 }
 
-svg {
-  fill: #3F51B5;
+.hexagon:hover {
+  z-index: 10000;
+}
+.hexagon svg {
   fill-opacity: 0;
 }
-svg:hover {
-  fill-opacity: 1;
-}
-svg:hover text {
-  fill-opacity: 1;
-}
 
-svg polygon {
-  stroke: #3F51B5;
-  stroke-width: 0.2;
+.hexagon:hover svg {
   transition: fill-opacity .2s;
+  fill: #3F51B5;
+  fill-opacity: 100;
 }
-// svg g text {
-//   font-size: 0.2em;
-//   fill: #000;
-//   fill-opacity: 0.9;
-//   transition: fill-opacity .2s;
-// }
-svg path {
-  fill: none;
-  stroke: hsl(60, 20%, 70%);
-  stroke-width: 0.4em;
-  stroke-opacity: 0.3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-svg image {
-  y: -1.3px;
-
-  pattern {
-    &#a {
-      patternTransform: rotate(90)
-    }
-  }
-}
-

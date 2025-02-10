@@ -18,8 +18,8 @@ function GalaxyDisplay({ homes, rings, hyperlanes} : BoardMap) {
 
   return (
     <div>
-      <div style={{height: "400px"}}>
-        <Layout size={20} flat={true}>
+      <div style={{height: "800px"}}>
+        <Layout size={40} flat={true}>
           <Spaces spaces={spaces}/>
         </Layout>
       </div>
