@@ -12,18 +12,13 @@ type SpaceState = {
         r: number
         s: number
     },
+    rotate: number
 }
   
-/**
- * The tile is the physical piece of cardboard
- */
-type TileState = { source: string, rotate?: number }
-
 type BoardMap = {
     homes: SpaceState[]
     hyperlanes: SpaceState[]
     rings: SpaceState[][]
-    tiles: TileState[]
 }
 
 type Faction = keyof typeof raceToHomeSystemMap
@@ -52,4 +47,4 @@ type Action = {
   data: InitAction
 }
   
-export { BoardMap, TileState, SpaceState, InitAction, Action, State, Faction }
+export { BoardMap, SpaceState, InitAction, Action, State, Faction }

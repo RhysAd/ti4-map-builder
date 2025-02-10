@@ -2,13 +2,9 @@ import * as React from "react"
 import { Orientation } from "./models/Orientation"
 import { Point } from "./models/Point"
 
-export type Size = { x: number; y: number }
-
 export type LayoutDimension = {
-  size: Size
+  size: number
   orientation: Orientation
-  origin: Size
-  spacing: number
 }
 export type LayoutContextProps = {
   layout: LayoutDimension
@@ -37,16 +33,12 @@ const LAYOUT_POINTY = new Orientation(
   2.0 / 3.0,
   0.5,
 )
-const defaultSize = new Point(10, 10)
-const defaultOrigin = new Point(0, 0)
-const defaultSpacing = 1.0
+const defaultSize = 10
 
 const Context = React.createContext<LayoutContextProps>({
   layout: {
     size: defaultSize,
     orientation: LAYOUT_FLAT,
-    origin: defaultOrigin,
-    spacing: defaultSpacing,
   },
   points: "",
 })
@@ -65,18 +57,19 @@ export function useLayoutContext() {
  */
 
 function calculateCoordinates(
-  circumradius: number,
+  size: number,
   angle: number = 0,
   center: Point = new Point(0, 0),
 ) {
-  const corners: Point[] = []
-
-  for (let i = 0; i < 6; i++) {
-    const x = circumradius * Math.cos((2 * Math.PI * i) / 6 + angle)
-    const y = circumradius * Math.sin((2 * Math.PI * i) / 6 + angle)
-    const point = new Point(center.x + x, center.y + y)
-    corners.push(point)
-  }
+  const y = Math.sqrt(3) / 2 * size
+  const corners: Point[] = [
+    new Point(2 * size, y),
+    new Point(size * 1.5, 0),
+    new Point(size / 2, 0),
+    new Point(0, y),
+    new Point(size / 2, 2 * y),
+    new Point(size * 1.5, y * 2)
+  ]
 
   return corners
 }
@@ -89,44 +82,36 @@ export type LayoutProps = {
     | JSX.Element[]
   className?: string
   flat?: boolean
-  origin?: any
-  /* defines scale */
-  size?: Size
-  space?: number
-  spacing?: number
+  size?: number
 }
 
 /**
  * Provides LayoutContext for all descendands and renders child elements inside a <g> (Group) element
  */
 export function Layout({
-  size = defaultSize,
-  flat = true,
-  spacing = defaultSpacing,
-  origin = defaultOrigin,
   children,
   className,
-  ...rest
+  size = defaultSize,
+  flat = true,
 }: LayoutProps) {
   const orientation = flat ? LAYOUT_FLAT : LAYOUT_POINTY
   const angle = flat ? 0 : Math.PI / 6
-  const cornerCoords = calculateCoordinates(size.x, angle)
+  const cornerCoords = calculateCoordinates(size, angle)
   const points = cornerCoords.map((point) => `${point.x},${point.y}`).join(" ")
-  const childLayout = Object.assign({}, rest, {
-    orientation,
-    size,
-    origin,
-    spacing,
-  })
 
   return (
     <Context.Provider
       value={{
-        layout: childLayout,
+        layout: {
+          size: size,
+          orientation: orientation
+        },
         points,
       }}
     >
-      <g className={className}>{children}</g>
+      <div className={className} style={{position: "relative", width: "100%", height: "100%"}}>
+        {children}
+      </div>
     </Context.Provider>
   )
 }

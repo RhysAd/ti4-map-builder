@@ -1,5 +1,5 @@
 import { LayoutDimension } from "./Layout"
-import { Hex, HexCoordinates } from "./models/Hex"
+import { Hex } from "./models/Hex"
 import { Point } from "./models/Point"
 
 /** A class which contains static methods which are useful for working with Hexes */
@@ -13,42 +13,51 @@ export class HexUtils {
     new Hex(0, 1, -1),
   ]
 
+  static DIAGONALS: Hex[] = [
+    new Hex(2, -1, -1),
+    new Hex(1, -2, 1),
+    new Hex(-1, -1, 2),
+    new Hex(-2, 1, 1),
+    new Hex(-1, 2, -1),
+    new Hex(1, 1, -2)
+  ]
+
   /** 
    * Checks if coordinates are the same.
-   * @param {HexCoordinates} a - first set of coordinates 
-   * @param {HexCoordinates} b - second set of coordinates
+   * @param {Hex} a - first set of coordinates 
+   * @param {Hex} b - second set of coordinates
    * @returns {boolean} - true if all coords are the same, false otherwise
    */
-  static equals(a: HexCoordinates, b: HexCoordinates): boolean {
+  static equals(a: Hex, b: Hex): boolean {
     return a.q === b.q && a.r === b.r && a.s === b.s
   }
 
   /** 
    * Returns a new Hex with the addition of q,r,s values from A and B respectively 
-   * @param {HexCoordinates} a - first set of coordinates
-   * @param {HexCoordinates} b - second set of coordinates
+   * @param {Hex} a - first set of coordinates
+   * @param {Hex} b - second set of coordinates
    * @returns {Hex} - new hex at the position of the sum of the coords
    */
-  static add(a: HexCoordinates, b: HexCoordinates): Hex {
+  static add(a: Hex, b: Hex): Hex {
     return new Hex(a.q + b.q, a.r + b.r, a.s + b.s)
   }
 
   /** 
    * Returns a new Hex with the subtraction of q,r,s values from A and B respectively 
-   * @param {HexCoordinates} a - first set of coordinates
-   * @param {HexCoordinates} b - second set of coordinates
+   * @param {Hex} a - first set of coordinates
+   * @param {Hex} b - second set of coordinates
    * @returns {Hex} - new hex at the position of the difference between a and b
    */
-  static subtract(a: HexCoordinates, b: HexCoordinates): Hex {
+  static subtract(a: Hex, b: Hex): Hex {
     return new Hex(a.q - b.q, a.r - b.r, a.s - b.s)
   }
 
   /** 
-   * @param {HexCoordinates} a - first set of coordinates
-   * @param {HexCoordinates} k - second set of coordinates
+   * @param {Hex} a - first set of coordinates
+   * @param {Hex} k - second set of coordinates
    * @returns {Hex} new hex at the position of the product between a's coordinates and a constant k
    */
-  static multiply(a: HexCoordinates, k: number): Hex {
+  static multiply(a: Hex, k: number): Hex {
     return new Hex(a.q * k, a.r * k, a.s * k)
   }
 
@@ -62,22 +71,12 @@ export class HexUtils {
 
   /** 
    * Returns the distance between two hex coordinates 
-   * @param {HexCoordinates} a - first set of coordinates
-   * @param {HexCoordinates} b - second set of coordinates
+   * @param {Hex} a - first set of coordinates
+   * @param {Hex} b - second set of coordinates
    * @returns {number} the manhattan distance between a and b
    */
-  static distance(a: HexCoordinates, b: HexCoordinates): number {
+  static distance(a: Hex, b: Hex): number {
     return HexUtils.lengths(HexUtils.subtract(a, b))
-  }
-
-  /** 
-   * Returns a Hex whos coordinates represent the delta needed to move 
-   * in the given direction
-   * @param {number} direction - number representing the direction
-   * @returns {Hex}
-   */
-  static direction(direction: number): Hex {
-    return HexUtils.DIRECTIONS[(6 + (direction % 6)) % 6]
   }
 
   /** 
@@ -87,7 +86,7 @@ export class HexUtils {
    * @returns {Hex} Hex which is adjacent in the given direction
    */
   static neighbor(hex: Hex, direction: number): Hex {
-    return HexUtils.add(hex, HexUtils.direction(direction))
+    return HexUtils.add(hex, HexUtils.DIRECTIONS[direction])
   }
 
   /** Returns an array of all the direct neighbors of a Hex within one Hex away 
@@ -131,14 +130,10 @@ export class HexUtils {
    * @returns {Point} pixel coordinate of the Hex center
    */
   static hexToPixel(hex: Hex, layout: LayoutDimension): Point {
-    const s = layout.spacing
     const M = layout.orientation
-    let x = (M.f0 * hex.q + M.f1 * hex.r) * layout.size.x
-    let y = (M.f2 * hex.q + M.f3 * hex.r) * layout.size.y
-    // Apply spacing
-    x = x * s
-    y = y * s
-    return new Point(x + layout.origin.x, y + layout.origin.y)
+    let x = (M.f0 * hex.q + M.f1 * hex.r) * layout.size
+    let y = (M.f2 * hex.q + M.f3 * hex.r) * layout.size
+    return new Point(x, y)
   }
 
   /** Return the q,r,s coordinate of the hexagon given pixel point x and y. 
@@ -149,8 +144,8 @@ export class HexUtils {
   static pixelToHex(point: Point, layout: LayoutDimension): Hex {
     const M = layout.orientation
     const pt = new Point(
-      (point.x - layout.origin.x) / layout.size.x,
-      (point.y - layout.origin.y) / layout.size.y,
+      (point.x) / layout.size,
+      (point.y) / layout.size,
     )
     const q = M.b0 * pt.x + M.b1 * pt.y
     const r = M.b2 * pt.x + M.b3 * pt.y
@@ -179,7 +174,7 @@ export class HexUtils {
    * @param {number} t - alpha blending value 
    * @returns {Hex} new Hex which is between the two Hexes
    */
-  static hexLerp(a: HexCoordinates, b: HexCoordinates, t: number): Hex {
+  static hexLerp(a: Hex, b: Hex, t: number): Hex {
     return new Hex(
       HexUtils.lerp(a.q, b.q, t),
       HexUtils.lerp(a.r, b.r, t),
@@ -190,10 +185,10 @@ export class HexUtils {
   /** Return a string ID from Hex Coordinates.
    * Example: Hex Coordinates of {q: 1, r: 2, s: 3} is returned
    * as string "1,2,3"
-   * @param {HexCoordinates} hex - target Hex 
+   * @param {Hex} hex - target Hex 
    * @returns {string} an ID string in the form `{q},{r},{s}`
    */
-  static getID(hex: HexCoordinates): string {
+  static getID(hex: Hex): string {
     return `${hex.q},${hex.r},${hex.s}`
   }
 }

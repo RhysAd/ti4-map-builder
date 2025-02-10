@@ -1,7 +1,7 @@
 
 import classNames from 'classnames';
 import { Faction } from '../galaxy/Types';
-import { raceToHomeSystemMap } from "../assets/data/raceData.json"
+import raceData from "../assets/data/raceData.json"
 
 import './DisplayRace.scss';
 
@@ -11,7 +11,7 @@ type DisplayRaceProps = {
 }
 
 function DisplayRace({ faction, status }: DisplayRaceProps) {
-    const id = raceToHomeSystemMap[faction]
+    const id = raceData.raceToHomeSystemMap[faction]
     const image = `tiles/ST_${id}.webp`
     const alt = `${faction} home system`
 

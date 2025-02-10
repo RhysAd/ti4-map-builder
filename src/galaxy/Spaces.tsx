@@ -7,10 +7,12 @@ function Spaces({spaces}: { spaces: SpaceState[] }) {
         const {
             position,
             source,
-            coordinates: { q, r, s}
+            coordinates: { q, r, s},
+            rotate
           } = space
-        return (<Hexagon key={position} q={q} r={r} s={s} fill={source} />)
-    })
+        return (
+        <Hexagon key={position} q={q} r={r} s={s} rotate={rotate || 0} fill={source} />
+    )})
     return <>
         {elements}
     </>

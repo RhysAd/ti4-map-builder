@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import boardData from '../assets/data/boardData.json'
 import { Faction } from './Types';
 import { galaxyReducer } from '../galaxy/Galaxy.reducer';
@@ -32,5 +32,5 @@ function Galaxy({ factions, mapType }: GalaxyProps) {
         <GalaxyDisplay {...state.boardMap} />
     )
 }
-  
+
 export { Galaxy }

@@ -4,7 +4,7 @@ import { BoardMap } from "../Types";
 import { Hex, HexUtils } from "../../hex";
 import { InitAction } from "../Types";
 
-import { raceToHomeSystemMap} from "../../assets/data/raceData.json"
+import raceData from "../../assets/data/raceData.json"
 
 const MECATOL_REX_TILE = "18"
 const EMPTY_TILE = "0"
@@ -72,17 +72,19 @@ function init({  rings, map: { home_worlds, hyperlane_tiles, primary_tiles, seco
 
     const homes = home_worlds.map((position, i) => {
         const faction = factions[i]
-        const system = raceToHomeSystemMap[faction]
+        const system = raceData.raceToHomeSystemMap[faction]
         return {
             position,
-            source: `${system}`
+            source: `${system}`,
+            rotate: 0
         }
     }).map(addCoordinates)
 
-    const hyperlanes = hyperlane_tiles.map(([position, source]) => {
+    const hyperlanes = hyperlane_tiles.map(([position, source, rotate]) => {
         return {
             position,
             source,
+            rotate: rotate * 60
         }
     }).map(addCoordinates)
     
@@ -91,21 +93,21 @@ function init({  rings, map: { home_worlds, hyperlane_tiles, primary_tiles, seco
             return {
                 position,
                 source: EMPTY_TILE,
+                rotate: 0
             }
         }).map(addCoordinates)
     })
 
-    const factionsSystems = factions.map((faction) => {
-        return raceToHomeSystemMap[faction]
-    })
-    const normalTiles = [ MECATOL_REX_TILE, EMPTY_TILE, ...home_worlds, ...factionsSystems].map((source) => ({ source: `${source}` }))
-    const hyperlaneTiles = hyperlane_tiles.map(([, source, rotate]) => ({ source, rotate: rotate * 60 }))
+    // const factionsSystems = factions.map((faction) => {
+    //     return raceData.raceToHomeSystemMap[faction]
+    // })
+    // const normalTiles = [ MECATOL_REX_TILE, EMPTY_TILE, ...home_worlds, ...factionsSystems].map((source) => ({ source: `${source}` }))
+    // const hyperlaneTiles = hyperlane_tiles.map(([, source, rotate]) => ({ source, rotate: rotate * 60 }))
 
     return {
         homes,
         hyperlanes,
         rings: ringsStates,
-        tiles: [...normalTiles, ...hyperlaneTiles]
     }
 }
 
