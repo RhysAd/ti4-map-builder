@@ -1,0 +1,24 @@
+$outline-width: 5;
+
+.tile {
+    position: relative;
+    width: 100%
+}
+
+.tile .outline {
+    top: -#{$outline-width}px;
+    left: -#{$outline-width}px;
+    height: calc(100% + #{$outline-width * 2}px);
+    width: calc(100% + #{$outline-width * 2}px);
+    position: absolute;
+}
+
+.tile svg {
+    fill-opacity: 0;
+}
+
+.tile:hover svg {
+    transition: fill-opacity .2s;
+    fill: #3F51B5;
+    fill-opacity: 100;
+}

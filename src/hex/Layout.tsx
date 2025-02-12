@@ -8,7 +8,6 @@ export type LayoutDimension = {
 }
 export type LayoutContextProps = {
   layout: LayoutDimension
-  points: string
 }
 
 const LAYOUT_FLAT = new Orientation(
@@ -40,38 +39,11 @@ const Context = React.createContext<LayoutContextProps>({
     size: defaultSize,
     orientation: LAYOUT_FLAT,
   },
-  points: "",
 })
 
 export function useLayoutContext() {
   const ctx = React.useContext(Context)
   return ctx
-}
-
-/**
- * Calculates the points for a hexagon given the size, angle, and center
- * @param circumradius Radius of the Hexagon
- * @param angle Angle offset for the hexagon in radians
- * @param center Central point for the heaxagon
- * @returns Array of 6 points
- */
-
-function calculateCoordinates(
-  size: number,
-  angle: number = 0,
-  center: Point = new Point(0, 0),
-) {
-  const y = Math.sqrt(3) / 2 * size
-  const corners: Point[] = [
-    new Point(2 * size, y),
-    new Point(size * 1.5, 0),
-    new Point(size / 2, 0),
-    new Point(0, y),
-    new Point(size / 2, 2 * y),
-    new Point(size * 1.5, y * 2)
-  ]
-
-  return corners
 }
 
 export type LayoutProps = {
@@ -96,8 +68,7 @@ export function Layout({
 }: LayoutProps) {
   const orientation = flat ? LAYOUT_FLAT : LAYOUT_POINTY
   const angle = flat ? 0 : Math.PI / 6
-  const cornerCoords = calculateCoordinates(size, angle)
-  const points = cornerCoords.map((point) => `${point.x},${point.y}`).join(" ")
+  const numTiles: number = 9;
 
   return (
     <Context.Provider
@@ -106,10 +77,9 @@ export function Layout({
           size: size,
           orientation: orientation
         },
-        points,
       }}
     >
-      <div className={className} style={{position: "relative", width: "100%", height: "100%"}}>
+      <div className={className} style={{position: "relative", width: `${size * 2.0 + (size * (numTiles - 1) * 3.0 / 2.0)}px`, height: `${Math.sqrt(3) * size * numTiles}px`}}>
         {children}
       </div>
     </Context.Provider>
