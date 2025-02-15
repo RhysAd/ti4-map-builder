@@ -1,25 +1,24 @@
-import { Hexagon } from '../hex';
+import { Hex, Hexagon } from '../hex';
 import { TileDisplay } from './TileDisplay';
 import { SpaceState, BoardMap } from './Types';
 
 
-function Spaces({spaces}: { spaces: SpaceState[] }) {
-    const elements = spaces.map((space) => {
-        const {
-            position,
-            source,
-            coordinates: { q, r, s},
-            rotate
-          } = space
-        return (
-        <Hexagon key={position} q={q} r={r} s={s}>
-            <TileDisplay
-                tileId={source}
-                rotation={rotate || 0}/>
-        </Hexagon>
-    )})
+function Spaces({spaces}: { spaces: Map<Hex, SpaceState> }) {
+    
     return <>
-        {elements}
+        {Array.from(spaces.entries()).map(([hex, spaceState], i) => {
+        return (
+        <Hexagon key={spaceState.position} q={hex.q} r={hex.r} s={hex.s}>
+            <div>
+                <TileDisplay
+                    tileId={spaceState.source}
+                    rotation={spaceState.rotate || 0}/>
+                    <div style={{position: "absolute", left: "calc(50% - 15px)", top: "30%", width:"30px", color: "white", textAlign: "center"}}>
+                        {spaceState.position}
+                    </div>
+            </div>
+        </Hexagon>
+    )})}
     </>
 }
 

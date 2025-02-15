@@ -21,19 +21,18 @@ export function Hexagon(
   const {
     q,
     r,
-    s,
     className,
     children
   } = props
 
   const { layout } = useLayoutContext()
   const { pixel } = useMemo(() => {
-    const hex = new Hex(q, r, s)
+    const hex = new Hex(q, r)
     const pixel = HexUtils.hexToPixel(hex, layout)
     return {
       pixel,
     }
-  }, [q, r, s, layout])
+  }, [q, r, layout])
   
   return (
     <div

@@ -20,8 +20,7 @@ function Galaxy({ factions, mapType }: GalaxyProps) {
         const boards: any = boardData.styles
         const map = boards?.[factions.length]?.[mapType] as any
 
-        // is it always 5 rings?
-        update({ type: "INIT", data: {  rings: 5, factions, map }})
+        update({ type: "INIT", data: { factions, map }})
     }, []) 
 
     if ( !state.boardMap ) {
