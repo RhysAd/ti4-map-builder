@@ -1,8 +1,10 @@
 import "./TileDisplay.scss"
+import classNames from "classnames"
 
 export type TileDisplayProps = {
     tileId: string
     rotation: number
+    className?: string | undefined
   }
 
 // const y = Math.sqrt(3) / 2;
@@ -23,10 +25,11 @@ export function TileDisplay(props: TileDisplayProps) {
     const {
       tileId,
       rotation,
+      className
     } = props;
 
   return (
-    <div className="tile">
+    <div className={classNames("tile", className)}>
       <svg
         className="outline"
         viewBox={`0 0 2 ${Math.sqrt(3)}`}>
