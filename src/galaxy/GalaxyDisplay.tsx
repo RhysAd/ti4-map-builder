@@ -1,13 +1,15 @@
 import { Layout } from '../hex';
-import { BoardMap } from './Types';
+import { BoardMap, SpaceState } from './Types';
 import { Spaces } from './Spaces';
 
-function GalaxyDisplay({ homeTiles, primaryTiles, secondaryTiles, tertiaryTiles, spaceMap} : BoardMap) {
+function GalaxyDisplay({boardMap, onTileClicked}: {boardMap: BoardMap, onTileClicked: (space: SpaceState) => void}) {
 
   return (
     <div className={"galaxy-display"}>
       <Layout size={40} flat={true}>
-        <Spaces spaces={spaceMap}/>
+        <Spaces
+          boardMap={boardMap}
+          onTileClicked={onTileClicked}/>
       </Layout>
     </div>
   )

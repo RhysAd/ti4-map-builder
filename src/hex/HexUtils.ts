@@ -182,13 +182,18 @@ export class HexUtils {
   }
 
   /** Return a string ID from Hex Coordinates.
-   * Example: Hex Coordinates of {q: 1, r: 2, s: 3} is returned
-   * as string "1,2,3"
+   * Example: Axial hex Coordinates of {q: 1, r: 2} is returned
+   * as string "1,2"
    * @param {Hex} hex - target Hex 
-   * @returns {string} an ID string in the form `{q},{r},{s}`
+   * @returns {string} an ID string in the form `{q},{r}`
    */
   static getID(hex: Hex): string {
-    return `${hex.q},${hex.r},${hex.s}`
+    return `${hex.q},${hex.r},`
+  }
+
+  static getHexFromId(id: string): Hex {
+    let [q, r] = id.split(",")
+    return new Hex(+q, +r)
   }
 
   /**

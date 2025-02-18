@@ -17,8 +17,14 @@ $outline-width: 5;
     fill-opacity: 0;
 }
 
-.tile:hover svg {
+.tile.outlined svg {
     transition: fill-opacity .2s;
     fill: #3F51B5;
+    fill-opacity: 100;
+}
+
+.tile:hover svg {
+    transition: fill-opacity .2s;
+    fill: white;
     fill-opacity: 100;
 }

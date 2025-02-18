@@ -51,12 +51,6 @@
 .hexagon:hover {
   z-index: 10000;
 }
-.hexagon svg {
-  fill-opacity: 0;
-}
-
-.hexagon:hover svg {
-  transition: fill-opacity .2s;
-  fill: #3F51B5;
-  fill-opacity: 100;
+.hexagon.outlined {
+  z-index: 10000;
 }

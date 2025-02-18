@@ -17,7 +17,8 @@ type BoardMap = {
     primaryTiles: Hex[],
     secondaryTiles: Hex[],
     tertiaryTiles: Hex[],
-    spaceMap: Map<Hex, SpaceState>
+    quaternaryTiles: Hex[],
+    spaceMap: Map<string, SpaceState>
 }
 
 type Faction = keyof typeof raceToHomeSystemMap
@@ -26,7 +27,17 @@ type State = {
   boardMap?: BoardMap,
 }
 
-type InitAction = {
+type Action =
+| {
+  type: "INIT"
+  payload: InitPayload
+}
+| {
+  type: "PLACE_TILE"
+  payload: PlaceTilePayload
+}
+
+type InitPayload = {
   map: {
     description: string
     source: string
@@ -34,15 +45,15 @@ type InitAction = {
     primary_tiles: number[]
     secondary_tiles: number[]
     tertiary_tiles: number[]
+    quaternary_tiles: number[]
     hyperlane_tiles: [number, string, number][]
   },
   factions: Faction[]
 }
 
-
-type Action = {
-  type: "INIT"
-  data: InitAction
+type PlaceTilePayload = {
+  coordinates: Hex,
+  tileId: string
 }
-  
-export { BoardMap, SpaceState, InitAction, Action, State, Faction }
+
+export { BoardMap, SpaceState, Action, State, InitPayload, PlaceTilePayload, Faction }

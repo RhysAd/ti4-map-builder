@@ -1,7 +1,7 @@
 export class Hex {
-  q: number
-  r: number
-  s: number
+  public q: number
+  public r: number
+  public s: number
 
   constructor(q: number, r: number) {
     this.q = q
@@ -9,8 +9,12 @@ export class Hex {
     this.s = -q - r
   }
 
-  public toString() {
-    return `(${this.q}, ${this.r})`
+  public toString(): string {
+    return `${this.q}, ${this.r}`
+  }
+
+  public equals(obj: Hex): boolean {
+    return this.q === obj.q && this.r === obj.r && this.s === obj.s
   }
 }
 export default Hex
