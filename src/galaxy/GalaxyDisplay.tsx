@@ -17,12 +17,10 @@ function GalaxyDisplay({ homes, rings, hyperlanes} : BoardMap) {
   const spaces = [mecatol, ...homes, ...rings.flatMap((ring) => ring), ...hyperlanes]
 
   return (
-    <div>
-      <div style={{height: "800px"}}>
-        <Layout size={40} flat={true}>
-          <Spaces spaces={spaces}/>
-        </Layout>
-      </div>
+    <div className={"galaxy-display"}>
+      <Layout size={40} flat={true}>
+        <Spaces spaces={spaces}/>
+      </Layout>
     </div>
   )
 }
