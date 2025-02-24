@@ -1,11 +1,21 @@
 import { Galaxy } from './galaxy/Galaxy';
 import './App.css';
+import { useState } from 'react';
+import { Login } from './login/Login';
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 function App() {
+
+  const [loggedIn, setLoggedIn] = useState(false)
   
   return (
     <div className={"App"}>
       {
+        loggedIn ?
         <Galaxy
           gameConfiguration={{
             factions: [
@@ -19,7 +29,8 @@ function App() {
               "Sardakk N'orr"
             ],
             mapType: "warp"
-        }}/>
+        }}/> :
+        <Login />
       }
     </div>
   );

@@ -85,13 +85,18 @@ function Galaxy({ gameConfiguration }: GalaxyProps) {
     }
 
     return (
-        <>
+        <div style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "#757575"
+        }}>
         <GalaxyDisplay
             initialBoard={state.initialBoard}
             spaceMap={spaceMap}
             onTileClicked={onTileClicked}/>
         <Handbar tileIds={handTileIds[userId]} selectedTile={selectedTile} setSelectedTile={setSelectedTile}/>
-        </>
+        </div>
     )
 }
 
