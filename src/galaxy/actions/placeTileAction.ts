@@ -1,19 +1,12 @@
-import { BoardMap, PlaceTilePayload } from "../Types";
+import { InitialBoard, PlacementEntry, State } from "../Types";
 
-function placeTile(boardMap: BoardMap | undefined, { coordinates, tileId }: PlaceTilePayload): BoardMap | undefined {
-    if (boardMap === undefined) {
-        return boardMap
-    }
-
-    let spaceState = boardMap.spaceMap.get(coordinates.toString())
-    if (spaceState === undefined) {
-        return boardMap
-    }
-
-    spaceState.source = tileId
-    boardMap.spaceMap.set(coordinates.toString(), spaceState)
-
-    return boardMap
+function placeTile(placements: PlacementEntry[], {user, coordinates, tileId }: PlacementEntry): PlacementEntry[] {
+    placements.push({
+        user: user,
+        coordinates: coordinates,
+        tileId: tileId
+    })
+    return placements
 }
 
 export { placeTile }

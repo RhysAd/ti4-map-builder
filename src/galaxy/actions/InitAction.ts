@@ -1,11 +1,11 @@
-import { BoardMap, InitPayload, SpaceState } from "../Types";
+import { InitialBoard, InitPayload, SpaceState } from "../Types";
 import { Hex, HexUtils } from "../../hex";
 import raceData from "../../assets/data/raceData.json"
 
 const MECATOL_REX_TILE = "18"
 const EMPTY_TILE = "0"
 
-function init({ map: { home_worlds, hyperlane_tiles, primary_tiles, secondary_tiles, tertiary_tiles, quaternary_tiles }, factions }: InitPayload ): BoardMap {
+function init({ map: { home_worlds, hyperlane_tiles, primary_tiles, secondary_tiles, tertiary_tiles, quaternary_tiles }, factions }: InitPayload ): InitialBoard {
 
     let spaceMap = new Map<string, SpaceState>()
 
