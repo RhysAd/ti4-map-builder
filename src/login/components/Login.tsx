@@ -1,15 +1,16 @@
-import { Box, Button, Card, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon } from "../../customIcons/CustomIcons";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../Firebase';
 import "./AuthDisplay.scss";
 
 export function Login({signUpPressed}: {signUpPressed: () => void}) {
 
-    const [emailError, setEmailError] = useState(false)
-    const [emailErrorMessage, setEmailErrorMessage] = useState('')
-    const [passwordError, setPasswordError] = useState(false)
-    const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
+    const [emailError, setEmailError] = useState("")
+    const [passwordError, setPasswordError] = useState("")
+    const [loginError, setLoginError] = useState("")
     const [open, setOpen] = useState(false)
 
     const handleClickOpen = () => {
@@ -22,38 +23,45 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (emailError || passwordError) {
-          return;
-        }
         const data = new FormData(event.currentTarget);
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        });
+        const email: string | undefined = data.get("email")?.toString()
+        const password: string | undefined = data.get("password")?.toString()
+        if (!validateInputs(email, password)) {
+            return
+        }
+        signInWithEmailAndPassword(auth, email!, password!)
+            .then((userCredential) => {
+
+            })
+            .catch((error) => {
+                const errorCode = error.code
+                if (errorCode === "auth/user-not-found") {
+                    setLoginError("Email not in use")
+                }
+                else if (errorCode === "auth/wrong-password") {
+                    setLoginError("Incorrect email or password")
+                }
+                else {
+                    setLoginError("An error occured")
+                }
+            })
     };
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-    
+    const validateInputs = (email: string | undefined, password: string | undefined) => {
         let isValid = true;
     
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-          setEmailError(true);
-          setEmailErrorMessage('Please enter a valid email address.');
+        if (email === undefined || !/\S+@\S+\.\S+/.test(email)) {
+          setEmailError('Please enter a valid email address.');
           isValid = false;
         } else {
-          setEmailError(false);
-          setEmailErrorMessage('');
+          setEmailError('');
         }
     
-        if (!password.value || password.value.length < 6) {
-          setPasswordError(true);
-          setPasswordErrorMessage('Password must be at least 6 characters long.');
+        if (password === undefined || password.length < 6) {
+          setPasswordError('Password must be at least 6 characters long.');
           isValid = false;
         } else {
-          setPasswordError(false);
-          setPasswordErrorMessage('');
+          setPasswordError('');
         }
     
         return isValid;
@@ -89,8 +97,8 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
                         Email
                     </FormLabel>
                     <TextField
-                        error={emailError}
-                        helperText={emailErrorMessage}
+                        error={emailError !== ""}
+                        helperText={emailError}
                         id="email"
                         type="email"
                         name="email"
@@ -112,8 +120,8 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
                         Password
                     </FormLabel>
                     <TextField
-                        error={passwordError}
-                        helperText={passwordErrorMessage}
+                        error={passwordError !== ""}
+                        helperText={passwordError}
                         name="password"
                         placeholder="••••••"
                         type="password"
@@ -131,15 +139,18 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
-                    <ForgotPassword open={open} handleClose={handleClose} />
+                    {loginError !== "" ?
+                    <Alert severity="error">
+                        {loginError}
+                    </Alert> : null}
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        onClick={validateInputs}
                     >
                         Log in
                     </Button>
+                    <ForgotPassword open={open} handleClose={handleClose} />
                     <Link
                         component="button"
                         type="button"
