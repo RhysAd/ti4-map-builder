@@ -1,11 +1,13 @@
 import { Box, Button, Card, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import ForgotPassword from "./components/ForgotPassword";
-import { GoogleIcon } from "../customIcons/CustomIcons";
-import "./Login.scss";
+import ForgotPassword from "./ForgotPassword";
+import { GoogleIcon } from "../../customIcons/CustomIcons";
+import "./AuthDisplay.scss";
 
-export function Login() {
+export function SignUp({logInPressed}: {logInPressed: () => void}) {
 
+    const [dispayNameError, setDispayNameError] = useState(false)
+    const [dispayName, setDispayName] = useState('')
     const [emailError, setEmailError] = useState(false)
     const [emailErrorMessage, setEmailErrorMessage] = useState('')
     const [passwordError, setPasswordError] = useState(false)
@@ -60,15 +62,15 @@ export function Login() {
     };
 
     return (
-        <Stack className="log-in-container">
-            <Card className="log-in-card">
+        <Stack className="auth-display-container">
+            <Card className="auth-display-card">
                 <Typography
                     component="h1"
                     variant="h4"
                     sx={{fontWeight: "medium"}}
 
                 >
-                    Log in
+                    Sign up
                 </Typography>
                 <Box
                     component="form"
@@ -81,6 +83,28 @@ export function Login() {
                         gap: 2,
                     }}
                 >
+                    <FormControl>
+                    <FormLabel
+                        htmlFor="display-name"
+                        sx={{marginBottom: "8px"}}
+                    >
+                        Display Name
+                    </FormLabel>
+                    <TextField
+                        error={emailError}
+                        helperText={emailErrorMessage}
+                        id="display-name"
+                        type="text"
+                        name="display-name"
+                        placeholder="Name"
+                        autoFocus
+                        required
+                        fullWidth
+                        variant="outlined"
+                        color={emailError ? 'error' : 'primary'}
+                        size="small"
+                    />
+                    </FormControl>
                     <FormControl>
                     <FormLabel
                         htmlFor="email"
@@ -138,17 +162,8 @@ export function Login() {
                         variant="contained"
                         onClick={validateInputs}
                     >
-                        Log in
+                        Sign up
                     </Button>
-                    <Link
-                        component="button"
-                        type="button"
-                        onClick={handleClickOpen}
-                        variant="body2"
-                        sx={{ alignSelf: 'center' }}
-                    >
-                        Forgot your password?
-                    </Link>
                 </Box>
                 <Divider>or</Divider>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -158,17 +173,17 @@ export function Login() {
                         onClick={() => alert('Sign in with Google')}
                         startIcon={<GoogleIcon />}
                     >
-                        Sign in with Google
+                        Sign up with Google
                     </Button>
                     <Typography sx={{ textAlign: 'center' }}>
-                        Don&apos;t have an account?{' '}
+                        Already have an account?{' '}
                     <Link
                         component="button"
                         type="button"
                         variant="body2"
-                        onClick={() => alert('Sign in with Google')}
+                        onClick={logInPressed}
                     >
-                        Sign up
+                        Log in
                     </Link>
                     </Typography>
                 </Box>

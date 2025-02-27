@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Login } from '../login/Login';
+import { AuthDisplay } from '../login/AuthDisplay';
 
 const meta = {
-  title: 'Components/Login',
-  component: Login,
+  title: 'Components/AuthDisplay',
+  component: AuthDisplay,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -11,7 +11,7 @@ const meta = {
   args: {
 
   },
-} satisfies Meta<typeof Login>;
+} satisfies Meta<typeof AuthDisplay>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

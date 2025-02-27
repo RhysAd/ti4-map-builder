@@ -1,8 +1,8 @@
 import { Galaxy } from './galaxy/Galaxy';
-import './App.css';
 import { useState } from 'react';
-import { Login } from './login/Login';
+import { AuthDisplay } from './login/AuthDisplay';
 
+import './App.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -30,7 +30,7 @@ function App() {
             ],
             mapType: "warp"
         }}/> :
-        <Login />
+        <AuthDisplay />
       }
     </div>
   );

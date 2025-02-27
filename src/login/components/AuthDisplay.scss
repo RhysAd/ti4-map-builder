@@ -1,4 +1,4 @@
-.log-in-container {
+.auth-display-container {
     min-height: 100%;
 
     &:before {
@@ -16,7 +16,7 @@
     }
 }
 
-.log-in-card {
+.auth-display-card {
     display: flex;
     flex-direction: column;
     align-self: center;
