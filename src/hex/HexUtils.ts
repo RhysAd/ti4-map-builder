@@ -5,22 +5,22 @@ import { Point } from "./models/Point"
 /** A class which contains static methods which are useful for working with Hexes */
 export class HexUtils {
   static DIRECTIONS = [
-    new Hex(1, 0, -1),
-    new Hex(1, -1, 0),
-    new Hex(0, -1, 1),
-    new Hex(-1, 0, 1),
-    new Hex(-1, 1, 0),
-    new Hex(0, 1, -1),
+    new Hex(0, -1),
+    new Hex(1, -1),
+    new Hex(1, 0),
+    new Hex(0, 1),
+    new Hex(-1, 1),
+    new Hex(-1, 0),
   ]
 
-  static DIAGONALS: Hex[] = [
-    new Hex(2, -1, -1),
-    new Hex(1, -2, 1),
-    new Hex(-1, -1, 2),
-    new Hex(-2, 1, 1),
-    new Hex(-1, 2, -1),
-    new Hex(1, 1, -2)
-  ]
+  // static DIAGONALS: Hex[] = [
+  //   new Hex(2, -1, -1),
+  //   new Hex(1, -2, 1),
+  //   new Hex(-1, -1, 2),
+  //   new Hex(-2, 1, 1),
+  //   new Hex(-1, 2, -1),
+  //   new Hex(1, 1, -2)
+  // ]
 
   /** 
    * Checks if coordinates are the same.
@@ -39,7 +39,7 @@ export class HexUtils {
    * @returns {Hex} - new hex at the position of the sum of the coords
    */
   static add(a: Hex, b: Hex): Hex {
-    return new Hex(a.q + b.q, a.r + b.r, a.s + b.s)
+    return new Hex(a.q + b.q, a.r + b.r)
   }
 
   /** 
@@ -49,7 +49,7 @@ export class HexUtils {
    * @returns {Hex} - new hex at the position of the difference between a and b
    */
   static subtract(a: Hex, b: Hex): Hex {
-    return new Hex(a.q - b.q, a.r - b.r, a.s - b.s)
+    return new Hex(a.q - b.q, a.r - b.r)
   }
 
   /** 
@@ -58,7 +58,7 @@ export class HexUtils {
    * @returns {Hex} new hex at the position of the product between a's coordinates and a constant k
    */
   static multiply(a: Hex, k: number): Hex {
-    return new Hex(a.q * k, a.r * k, a.s * k)
+    return new Hex(a.q * k, a.r * k)
   }
 
   /** 
@@ -120,7 +120,7 @@ export class HexUtils {
     else if (rDiff > sDiff) rr = -rq - rs
     else rs = -rq - rr
 
-    return new Hex(rq, rr, rs)
+    return new Hex(rq, rr)
   }
 
   /** Given the q,r,s of a hexagon return the x and y pixel coordinates of the
@@ -149,7 +149,7 @@ export class HexUtils {
     )
     const q = M.b0 * pt.x + M.b1 * pt.y
     const r = M.b2 * pt.x + M.b3 * pt.y
-    const hex = new Hex(q, r, -q - r)
+    const hex = new Hex(q, r)
     return HexUtils.round(hex)
   }
 
@@ -178,18 +178,95 @@ export class HexUtils {
     return new Hex(
       HexUtils.lerp(a.q, b.q, t),
       HexUtils.lerp(a.r, b.r, t),
-      HexUtils.lerp(a.s, b.s, t),
     )
   }
 
   /** Return a string ID from Hex Coordinates.
-   * Example: Hex Coordinates of {q: 1, r: 2, s: 3} is returned
-   * as string "1,2,3"
+   * Example: Axial hex Coordinates of {q: 1, r: 2} is returned
+   * as string "1,2"
    * @param {Hex} hex - target Hex 
-   * @returns {string} an ID string in the form `{q},{r},{s}`
+   * @returns {string} an ID string in the form `{q},{r}`
    */
   static getID(hex: Hex): string {
-    return `${hex.q},${hex.r},${hex.s}`
+    return `${hex.q},${hex.r},`
+  }
+
+  static getHexFromId(id: string): Hex {
+    let [q, r] = id.split(",")
+    return new Hex(+q, +r)
+  }
+
+  /**
+   * 
+   * @param hex 
+   * @param factor 
+   * @returns {Hex} a hex with q, r, s scaled from 0, 0, 0 by factor
+   */
+  static scale(hex: Hex, factor: number): Hex {
+    return new Hex(hex.q * factor, hex.r * factor)
+  }
+
+  /**
+   * 
+   * @param center origin of ring
+   * @param radius
+   * @returns {Hex[]} a ring of hexes around center at distance radius
+   */
+  static getRing(center: Hex, radius: number): Hex[] {
+    if (radius === 0) {
+      return [center];
+    }
+
+    let results = []
+    let hex: Hex = this.add(center, this.scale(this.DIRECTIONS[0], radius))
+
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < radius; j++) {
+        results.push(hex)
+        hex = this.neighbor(hex, (i + 2) % 6);
+      }
+    }
+    return results;
+  }
+
+  /** Returns a spiral of hexes beggining at center, starting each ring at (0, -1, 1) from previous ring origin
+   * 
+   * @param center 
+   * @param radius 
+   * @returns 
+   */
+  static getSpiral(center: Hex, radius: number): Hex[] {
+    var results = [center]
+    for (let i = 1; i <= radius; i++) {
+      results.push(...this.getRing(center, i))
+    }
+    return results;
+  }
+
+  /**
+   * 
+   * @param index position of hex following spiral pattern
+   * @returns {Hex}
+   */
+  static getHexFromPosition(index: number): Hex {
+    if (index === 0) {
+      return new Hex(0, 0)
+    }
+    
+    let layer: number = Math.floor((3 + Math.sqrt(12 * index - 3)) / 6)
+    let postition: number = index - (3 * (layer - 1) * (layer) + 1)
+
+    let direction = (Math.floor(postition / layer)) % 6;
+
+    let axial = this.DIRECTIONS[direction]
+    let radial = this.DIRECTIONS[(direction + 2) % 6]
+
+    let radialScale = postition % layer
+
+    let q = axial.q * layer + radial.q * radialScale
+    let r = axial.r * layer + radial.r * radialScale
+
+    return new Hex(q, r);
   }
 }
 

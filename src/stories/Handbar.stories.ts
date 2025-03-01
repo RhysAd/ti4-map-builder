@@ -27,6 +27,8 @@ export const Tiles8: Story = {
       "6",
       "7",
       "8"
-    ]
+    ],
+    selectedTile: 1,
+    setSelectedTile: (value) => {}
   }
 };

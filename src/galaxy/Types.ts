@@ -1,4 +1,5 @@
 import { raceToHomeSystemMap } from "../assets/data/raceData.json"
+import { Hex } from "../hex"
 
 /**
  * 
@@ -7,18 +8,17 @@ import { raceToHomeSystemMap } from "../assets/data/raceData.json"
 type SpaceState = {
     position: number
     source: string
-    coordinates: {
-        q: number
-        r: number
-        s: number
-    },
+    coordinates: Hex,
     rotate: number
 }
   
 type BoardMap = {
-    homes: SpaceState[]
-    hyperlanes: SpaceState[]
-    rings: SpaceState[][]
+    homeTiles: Hex[]
+    primaryTiles: Hex[],
+    secondaryTiles: Hex[],
+    tertiaryTiles: Hex[],
+    quaternaryTiles: Hex[],
+    spaceMap: Map<string, SpaceState>
 }
 
 type Faction = keyof typeof raceToHomeSystemMap
@@ -27,8 +27,17 @@ type State = {
   boardMap?: BoardMap,
 }
 
-type InitAction = {
-  rings: number
+type Action =
+| {
+  type: "INIT"
+  payload: InitPayload
+}
+| {
+  type: "PLACE_TILE"
+  payload: PlaceTilePayload
+}
+
+type InitPayload = {
   map: {
     description: string
     source: string
@@ -36,15 +45,15 @@ type InitAction = {
     primary_tiles: number[]
     secondary_tiles: number[]
     tertiary_tiles: number[]
+    quaternary_tiles: number[]
     hyperlane_tiles: [number, string, number][]
   },
   factions: Faction[]
 }
 
-
-type Action = {
-  type: "INIT"
-  data: InitAction
+type PlaceTilePayload = {
+  coordinates: Hex,
+  tileId: string
 }
-  
-export { BoardMap, SpaceState, InitAction, Action, State, Faction }
+
+export { BoardMap, SpaceState, Action, State, InitPayload, PlaceTilePayload, Faction }
