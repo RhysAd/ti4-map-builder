@@ -12,19 +12,28 @@ type SpaceState = {
     rotate: number
 }
   
-type BoardMap = {
+type InitialBoard = {
     homeTiles: Hex[]
-    primaryTiles: Hex[],
-    secondaryTiles: Hex[],
-    tertiaryTiles: Hex[],
-    quaternaryTiles: Hex[],
+    primaryTiles: Hex[]
+    secondaryTiles: Hex[]
+    tertiaryTiles: Hex[]
+    quaternaryTiles: Hex[]
     spaceMap: Map<string, SpaceState>
 }
 
 type Faction = keyof typeof raceToHomeSystemMap
 
+type GameConfiguration = {
+  factions: Faction[]
+  mapType: string
+}
+
 type State = {
-  boardMap?: BoardMap,
+  gameConfiguration: GameConfiguration
+  initialBoard: InitialBoard | undefined
+  placements: PlacementEntry[]
+  initialHandTileIds: string[][]
+  currentPlacement: PlacementEntry[] | undefined
 }
 
 type Action =
@@ -34,7 +43,10 @@ type Action =
 }
 | {
   type: "PLACE_TILE"
-  payload: PlaceTilePayload
+  payload: PlacementEntry
+}
+| {
+  type: "UNDO_PLACEMENT"
 }
 
 type InitPayload = {
@@ -51,9 +63,10 @@ type InitPayload = {
   factions: Faction[]
 }
 
-type PlaceTilePayload = {
-  coordinates: Hex,
+type PlacementEntry = {
+  user: string
   tileId: string
+  coordinates: string
 }
 
-export { BoardMap, SpaceState, Action, State, InitPayload, PlaceTilePayload, Faction }
+export { InitialBoard, SpaceState, Action, State, GameConfiguration, InitPayload, Faction, PlacementEntry }

@@ -1,17 +1,16 @@
 import { ReactElement } from 'react';
 import { Hex, Hexagon, HexUtils } from '../hex';
 import { TileDisplay } from './TileDisplay';
-import { SpaceState, BoardMap } from './Types';
+import { SpaceState, InitialBoard } from './Types';
 
-function Spaces({boardMap, onTileClicked}: { boardMap: BoardMap, onTileClicked: (space: SpaceState) => void }) {
+function Spaces({initialBoard, spaceMap, onTileClicked}: { initialBoard: InitialBoard, spaceMap: Map<string, SpaceState>, onTileClicked: (space: SpaceState) => void }) {
     const {
         homeTiles,
         primaryTiles,
         secondaryTiles,
         tertiaryTiles,
         quaternaryTiles,
-        spaceMap,
-    } = boardMap
+    } = initialBoard
 
     const placementTiles = new Map<string, SpaceState>()
     const nonPlacementTiles = new Map<string, SpaceState>(spaceMap)
