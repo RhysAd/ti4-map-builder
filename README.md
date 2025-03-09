@@ -1,5 +1,7 @@
 # ti4-map-builder
 
-Link to the static page:
+To run the firbase emulators:
+firebase emulators:start
 
-https://benjamin-almarza.github.io/ti4-map-builder
+To run app for dev:
+yarn start
