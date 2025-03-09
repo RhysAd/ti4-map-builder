@@ -1,9 +1,9 @@
-import { Alert, Box, Button, Card, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { GoogleIcon } from "../../customIcons/CustomIcons";
 import { auth } from '../../Firebase';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import "./AuthDisplay.scss";
+import { Card, SignInContainer } from "./Styled"
 
 export function SignUp({logInPressed}: {logInPressed: () => void}) {
 
@@ -64,12 +64,12 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
     };
 
     return (
-        <Stack className="auth-display-container">
-            <Card className="auth-display-card">
+        <SignInContainer>
+            <Card variant="outlined">
                 <Typography
                     component="h1"
                     variant="h4"
-                    sx={{fontWeight: "medium"}}
+                    sx={{fontSize: 'clamp(2rem, 10vw, 2.15rem)'}}
 
                 >
                     Sign up
@@ -86,12 +86,7 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
                     }}
                 >
                     <FormControl>
-                    <FormLabel
-                        htmlFor="display-name"
-                        sx={{marginBottom: "8px"}}
-                    >
-                        Display Name
-                    </FormLabel>
+                    <FormLabel htmlFor="display-name">Display Name</FormLabel>
                     <TextField
                         error={displayNameError !== ""}
                         helperText={displayNameError}
@@ -104,16 +99,10 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
                         fullWidth
                         variant="outlined"
                         color={emailError ? 'error' : 'primary'}
-                        size="small"
                     />
                     </FormControl>
                     <FormControl>
-                    <FormLabel
-                        htmlFor="email"
-                        sx={{marginBottom: "8px"}}
-                    >
-                        Email
-                    </FormLabel>
+                    <FormLabel htmlFor="email">Email</FormLabel>
                     <TextField
                         error={emailError !== ""}
                         helperText={emailError}
@@ -127,16 +116,10 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
                         fullWidth
                         variant="outlined"
                         color={emailError ? 'error' : 'primary'}
-                        size="small"
                     />
                     </FormControl>
                     <FormControl>
-                    <FormLabel
-                        htmlFor="password"
-                        sx={{marginBottom: "8px"}}
-                    >
-                        Password
-                    </FormLabel>
+                    <FormLabel htmlFor="password">Password</FormLabel>
                     <TextField
                         error={passwordError !== ""}
                         helperText={passwordError}
@@ -150,7 +133,6 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
                         fullWidth
                         variant="outlined"
                         color={passwordError ? 'error' : 'primary'}
-                        size="small"
                     />
                     </FormControl>
                     <FormControlLabel
@@ -192,6 +174,6 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
                     </Typography>
                 </Box>
             </Card>
-        </Stack>
+        </SignInContainer>
     )
 }
