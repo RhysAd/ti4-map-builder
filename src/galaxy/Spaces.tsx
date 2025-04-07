@@ -14,19 +14,19 @@ function Spaces({initialBoard, spaceMap, onTileClicked}: { initialBoard: Initial
 
     const placementTiles = new Map<string, SpaceState>()
     const nonPlacementTiles = new Map<string, SpaceState>(spaceMap)
-    if (tertiaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
+    if (tertiaryTiles.length !== 0 && tertiaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
         quaternaryTiles.forEach(hex => {
             placementTiles.set(hex.toString(), spaceMap.get(hex.toString())!)
             nonPlacementTiles.delete(hex.toString())
         })
     }
-    else if (secondaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
+    else if (secondaryTiles.length !== 0 && secondaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
         tertiaryTiles.forEach(hex => {
             placementTiles.set(hex.toString(), spaceMap.get(hex.toString())!)
             nonPlacementTiles.delete(hex.toString())
         })
     }
-    else if (primaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
+    else if (primaryTiles.length !== 0 && primaryTiles.every(hex => spaceMap.get(hex.toString())?.source !== "0")) {
         secondaryTiles.forEach(hex => {
             placementTiles.set(hex.toString(), spaceMap.get(hex.toString())!)
             nonPlacementTiles.delete(hex.toString())
