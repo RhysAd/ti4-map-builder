@@ -1,9 +1,10 @@
 import { Alert, Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { GoogleIcon } from "../../customIcons/CustomIcons";
 import { auth } from '../../Firebase';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Card, SignInContainer } from "./Styled"
+import { AuthContext } from "../AuthProvider";
 
 export function SignUp({logInPressed}: {logInPressed: () => void}) {
 
@@ -11,6 +12,9 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [signUpError, setSignUpError] = useState('')
+
+    const auth = useContext(AuthContext)
+    
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -21,11 +25,8 @@ export function SignUp({logInPressed}: {logInPressed: () => void}) {
         if (!validateInputs(email, password, displayName)) {
             return
         }
-        createUserWithEmailAndPassword(auth, email!, password!)
-            .then((userCredential) => {
-                return updateProfile(userCredential.user, {displayName: displayName})
-            })
-            .catch((error) => {
+        auth.signUp(email!, password!, displayName!)
+            .catch((error: { code: string; }) => {
                 const errorCode = error.code
                 if (errorCode === "auth/email-already-in-use") {
                     setSignUpError("Email already in use")

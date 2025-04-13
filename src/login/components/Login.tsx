@@ -1,10 +1,11 @@
 import { Alert, Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, Link, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ForgotPassword from "./ForgotPassword";
 import { GoogleIcon } from "../../customIcons/CustomIcons";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../Firebase';
 import { Card, SignInContainer } from "./Styled"
+import { AuthContext } from "../AuthProvider";
 
 export function Login({signUpPressed}: {signUpPressed: () => void}) {
 
@@ -12,6 +13,8 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
     const [passwordError, setPasswordError] = useState("")
     const [loginError, setLoginError] = useState("")
     const [open, setOpen] = useState(false)
+
+    const auth = useContext(AuthContext)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -29,10 +32,8 @@ export function Login({signUpPressed}: {signUpPressed: () => void}) {
         if (!validateInputs(email, password)) {
             return
         }
-        signInWithEmailAndPassword(auth, email!, password!)
-            .then((userCredential) => {
-
-            })
+        auth.signIn(email!, password!)
+            .then((userCredential) => {})
             .catch((error) => {
                 const errorCode = error.code
                 if (errorCode === "auth/user-not-found") {
