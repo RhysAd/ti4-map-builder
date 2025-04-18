@@ -1,5 +1,5 @@
-import { TileDisplay } from '../galaxy/TileDisplay';
-import { Toolbar } from '@mui/material';
+import { TileDisplay } from '../TileDisplay';
+import { Drawer, Toolbar } from '@mui/material';
 
 export type HandBarProps = {
     tileIds: string[]
@@ -15,10 +15,20 @@ export function Handbar(props: HandBarProps) {
     } = props;
 
     return (
-        <Toolbar sx={{
-            height: 140,
-            gap: 1,
-            overflow: "auto"
+        <Drawer
+            variant="permanent"
+            anchor="bottom"
+            sx={{
+                height: 140,
+                [`& .MuiDrawer-paper`]: { 
+                    height: 140,
+                    position: "relative",
+                    gap: 1,
+                    overflow: "auto",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center"
+                },
         }}>
             {tileIds.map((tileId, i) => (
                 <div
@@ -27,6 +37,7 @@ export function Handbar(props: HandBarProps) {
                     style={{
                         flexShrink: 0,
                         width: "120px",
+                        marginLeft: i === 0 ? "10px" : "0"
                     }}>
                     <TileDisplay
                         tileId={tileId}
@@ -35,6 +46,6 @@ export function Handbar(props: HandBarProps) {
                     />
                 </div>
             ))}
-        </Toolbar>
+        </Drawer>
     )
 }

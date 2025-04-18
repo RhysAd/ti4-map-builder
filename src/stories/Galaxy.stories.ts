@@ -30,4 +30,7 @@ export const EightPlayersWarp: Story = {
         "Sardakk N'orr"
       ],
       mapType: "warp"
-}},};
+    },
+    tilePlacements: [],
+    placeTile: (placement) => {}
+  },};

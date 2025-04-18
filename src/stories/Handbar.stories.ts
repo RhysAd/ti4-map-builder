@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Handbar } from '../Handbar/Handbar';
+import { Handbar } from '../galaxy/components/Handbar';
 
 const meta = {
   title: 'Components/Handbar',

@@ -1,29 +1,33 @@
 import { useEffect, useReducer, useState } from 'react';
 import boardData from '../assets/data/boardData.json'
-import { GameConfiguration, PlacementEntry, SpaceState } from './Types';
+import { GameConfiguration, SpaceState } from './Types';
 import { galaxyReducer } from '../galaxy/Galaxy.reducer';
 import './Board.scss';
 import { GalaxyDisplay } from './GalaxyDisplay';
-import { Handbar } from '../Handbar/Handbar';
+import { Handbar } from './components/Handbar';
 import _ from 'lodash';
+import { SideMenu } from './components/SideMenu';
+import { Box } from '@mui/material';
+import { TilePlacement } from '../domain/Game';
 
 type GalaxyProps = {
     gameConfiguration: GameConfiguration
+    tilePlacements: TilePlacement[]
+    placeTile: (placement: TilePlacement) => void
 }
 
-function Galaxy({ gameConfiguration }: GalaxyProps) {
+function Galaxy({ gameConfiguration, tilePlacements, placeTile }: GalaxyProps) {
     const {
         factions,
         mapType,
     } = gameConfiguration
 
     // index of the local user
-    const userId = "0"
+    const userId = 0
 
     const [state, dispatch] = useReducer(galaxyReducer, {
         gameConfiguration,
         initialBoard: undefined,
-        placements: [],
         initialHandTileIds: [["1", "2", "3", "4", "5", "6", "7", "8"]],
         currentPlacement: undefined
     });
@@ -34,30 +38,30 @@ function Galaxy({ gameConfiguration }: GalaxyProps) {
         const map = boards?.[factions.length]?.[mapType] as any
 
         dispatch({ type: "INIT", payload: { factions, map }})
-    }, [])
+    }, [gameConfiguration])
 
     if ( !state.initialBoard ) {
         return null
     }
 
-    function buildSpaceMap(initialSpaceMap: Map<string, SpaceState>, placements: PlacementEntry[]): Map<string, SpaceState> {
+    function buildSpaceMap(initialSpaceMap: Map<string, SpaceState>, placements: TilePlacement[]): Map<string, SpaceState> {
         const spaceMap = _.cloneDeep(initialSpaceMap)
         placements.forEach(placement => {
-            let spaceState = spaceMap.get(placement.coordinates)
+            let spaceState = spaceMap.get(placement.hex)
             if (!spaceState) {
                 return
             }
             spaceState.source = placement.tileId
-            spaceMap.set(placement.coordinates, spaceState)
+            spaceMap.set(placement.hex, spaceState)
         })
         return spaceMap
     }
-    const spaceMap: Map<string, SpaceState> = buildSpaceMap(state.initialBoard.spaceMap, state.placements)
+    const spaceMap: Map<string, SpaceState> = buildSpaceMap(state.initialBoard.spaceMap, [...tilePlacements, ...(state.currentPlacement ? [state.currentPlacement] : [])])
 
-    function buildHandTileIds(initialHandTileIds: string[][], placements: PlacementEntry[]): string[][] {
+    function buildHandTileIds(initialHandTileIds: string[][], placements: TilePlacement[]): string[][] {
         const handTileIds = _.cloneDeep(initialHandTileIds)
         placements.forEach(placement => {
-            const userHandTileIds = handTileIds[+placement.user]
+            const userHandTileIds = handTileIds[placement.factionIndex]
             const index: number = userHandTileIds.indexOf(placement.tileId)
             if (index < 0) {
                 console.log("Error finding hand tile in placement")
@@ -67,8 +71,7 @@ function Galaxy({ gameConfiguration }: GalaxyProps) {
         })
         return handTileIds
     }
-    const handTileIds = buildHandTileIds(state.initialHandTileIds, state.placements)
-
+    const handTileIds = buildHandTileIds(state.initialHandTileIds, [...tilePlacements, ...(state.currentPlacement ? [state.currentPlacement] : [])])
 
     const onTileClicked = (space: SpaceState) => {
         if (selectedTile === undefined) {
@@ -77,26 +80,36 @@ function Galaxy({ gameConfiguration }: GalaxyProps) {
         dispatch({
             type: "PLACE_TILE",
             payload: {
-                user: "0",
-                coordinates: space.coordinates.toString(),
-                tileId: handTileIds[userId][selectedTile]
+                factionIndex: 0,
+                tileId: handTileIds[userId][selectedTile],
+                hex: space.coordinates.toString()
         }})
+        placeTile({
+            factionIndex: userId,
+            tileId: handTileIds[userId][selectedTile],
+            hex: space.coordinates.toString()
+        })
         setSelectedTile(undefined)
     }
 
     return (
-        <div style={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "#757575"
-        }}>
-        <GalaxyDisplay
-            initialBoard={state.initialBoard}
-            spaceMap={spaceMap}
-            onTileClicked={onTileClicked}/>
-        <Handbar tileIds={handTileIds[userId]} selectedTile={selectedTile} setSelectedTile={setSelectedTile}/>
-        </div>
+        <Box sx={{ display: 'flex', height: "100%" }}>
+            <SideMenu tilePlacements={tilePlacements}/>
+            <Box sx={{
+                height: "100%",
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#757575",
+                overflow: "auto"
+            }}>
+            <GalaxyDisplay
+                initialBoard={state.initialBoard}
+                spaceMap={spaceMap}
+                onTileClicked={onTileClicked}/>
+            <Handbar tileIds={handTileIds[userId]} selectedTile={selectedTile} setSelectedTile={setSelectedTile}/>
+            </Box>
+        </Box>
     )
 }
 

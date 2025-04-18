@@ -1,4 +1,5 @@
 import { raceToHomeSystemMap } from "../assets/data/raceData.json"
+import { TilePlacement } from "../domain/Game"
 import { Hex } from "../hex"
 
 /**
@@ -31,9 +32,8 @@ type GameConfiguration = {
 type State = {
   gameConfiguration: GameConfiguration
   initialBoard: InitialBoard | undefined
-  placements: PlacementEntry[]
   initialHandTileIds: string[][]
-  currentPlacement: PlacementEntry[] | undefined
+  currentPlacement: TilePlacement | undefined
 }
 
 type Action =
@@ -43,7 +43,7 @@ type Action =
 }
 | {
   type: "PLACE_TILE"
-  payload: PlacementEntry
+  payload: TilePlacement
 }
 | {
   type: "UNDO_PLACEMENT"
@@ -63,10 +63,4 @@ type InitPayload = {
   factions: Faction[]
 }
 
-type PlacementEntry = {
-  user: string
-  tileId: string
-  coordinates: string
-}
-
-export { InitialBoard, SpaceState, Action, State, GameConfiguration, InitPayload, Faction, PlacementEntry }
+export { InitialBoard, SpaceState, Action, State, GameConfiguration, InitPayload, Faction }

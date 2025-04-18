@@ -61,12 +61,11 @@ function Dashboard(props: DashboardProps) {
             // TODO: do something here like return to logout page
         }
 
-        await deleteDoc(doc(collection(db, "games"), auth.user.uid))
-        try {
-            await deleteDoc(doc(collection(db, "games"), auth.user.uid))
-        } catch (e) {
-            console.error("Error deleting document: ", e);
-        }
+        deleteDoc(doc(collection(db, "games"), auth.user.uid))
+            .catch(e => console.error("Error deleting document: ", e))
+
+        deleteDoc(doc(collection(db, "placements"), auth.user.uid))
+            .catch(e => console.error("Error deleting document: ", e))
     }
 
     return (
