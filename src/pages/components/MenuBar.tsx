@@ -5,7 +5,7 @@ function MenuBar({ signOut }: {signOut: () => void }) {
 
     return (
         <>
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <AppBar position="fixed">
                 <Toolbar>
                     <IconButton
                     size="large"

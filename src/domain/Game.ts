@@ -10,4 +10,10 @@ type GameConfiguration = {
     factions: string[]
 }
 
-export { MapType, GameConfiguration }
+type TilePlacement = {
+    factionIndex: number
+    tileId: string
+    hex: string
+}
+
+export { MapType, GameConfiguration, TilePlacement }
