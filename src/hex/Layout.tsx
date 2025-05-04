@@ -79,7 +79,7 @@ export function Layout({
         },
       }}
     >
-      <div className={className} style={{position: "relative", width: `${size * 2.0 + (size * (numTiles - 1) * 3.0 / 2.0)}px`, height: `${Math.sqrt(3) * size * numTiles}px`}}>
+      <div className={className} style={{position: "relative", minWidth: `${size * 2.0 + (size * (numTiles - 1) * 3.0 / 2.0)}px`, height: `${Math.sqrt(3) * size * numTiles}px`}}>
         {children}
       </div>
     </Context.Provider>
